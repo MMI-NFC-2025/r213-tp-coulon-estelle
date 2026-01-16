@@ -1,0 +1,59 @@
+---
+---
+<header class="bg-gradient-to-br from-red-800 to-purple-500 text-white shadow-lg" role="banner">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-white no-underline" aria-label="Retour à l'accueil">Mon Site</a>
+
+            <button 
+                id="burger-btn" 
+                class="lg:hidden text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600 rounded p-1"
+                aria-label="Menu de navigation"
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+            >
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path id="burger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+
+            <nav class="hidden lg:flex gap-6" role="navigation" aria-label="Navigation principale">
+                <a href="/" class="text-white no-underline font-medium px-4 py-2 rounded-md transition-all duration-300 bg-white/10 hover:bg-white/25 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                    Accueil
+                </a>
+                <a href="/offres" class="text-white no-underline font-medium px-4 py-2 rounded-md transition-all duration-300 bg-white/10 hover:bg-white/25 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                    Offres
+                </a>
+            </nav>
+        </div>
+
+        <nav id="mobile-menu" class="hidden lg:hidden mt-4 flex-col gap-3" role="navigation" aria-label="Navigation mobile">
+            <a href="/" class="text-white no-underline font-medium px-4 py-3 rounded-md transition-all duration-300 bg-white/10 hover:bg-white/25 block text-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                Accueil
+            </a>
+            <a href="/offres" class="text-white no-underline font-medium px-4 py-3 rounded-md transition-all duration-300 bg-white/10 hover:bg-white/25 block text-center focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                Offres
+            </a>
+        </nav>
+    </div>
+</header>
+
+<script>
+    const burgerBtn = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const burgerIcon = document.getElementById('burger-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    burgerBtn?.addEventListener('click', () => {
+        const isExpanded = burgerBtn.getAttribute('aria-expanded') === 'true';
+        
+        mobileMenu?.classList.toggle('hidden');
+        mobileMenu?.classList.toggle('flex');
+        burgerIcon?.classList.toggle('hidden');
+        closeIcon?.classList.toggle('hidden');
+        
+        burgerBtn.setAttribute('aria-expanded', String(!isExpanded));
+        burgerBtn.setAttribute('aria-label', isExpanded ? 'Ouvrir le menu de navigation' : 'Fermer le menu de navigation');
+    });
+</script>
