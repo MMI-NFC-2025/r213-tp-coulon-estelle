@@ -1,0 +1,64 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { getOffres } from "../../../js/backend.mjs";
+
+const rawSurface = Astro.params.surface;
+
+const hasParam = typeof rawSurface === "string" && rawSurface.trim() !== "";
+const parsedSurface = hasParam ? Number(rawSurface) : 0;
+
+const isValidSurface = Number.isFinite(parsedSurface);
+const minSurface = isValidSurface ? parsedSurface : 0;
+
+const offres = await getOffres();
+const maisons =
+  isValidSurface
+    ? (Array.isArray(offres) ? offres : []).filter(
+        (m) => Number(m?.surface) > minSurface
+      )
+    : [];
+---
+
+<Layout titre={`Maisons > ${minSurface} m²`}>
+  <section class="mx-auto max-w-6xl px-4 py-10">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900">
+          Maisons avec surface &gt; {minSurface} m²
+        </h1>
+        <p class="text-sm text-gray-600">
+          {maisons.length} résultat{maisons.length > 1 ? "s" : ""}
+        </p>
+      </div>
+
+      <a
+        href="/offres"
+        class="inline-flex w-fit items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50"
+      >
+        ← Retour aux offres
+      </a>
+    </div>
+
+    {!isValidSurface ? (
+      <div class="mt-8 rounded-2xl border border-gray-200 bg-white p-6 text-gray-700">
+        Paramètre surface invalide.
+      </div>
+    ) : maisons.length === 0 ? (
+      <div class="mt-8 rounded-2xl border border-gray-200 bg-white p-6 text-gray-700">
+        Aucune maison ne dépasse {minSurface} m².
+      </div>
+    ) : (
+      <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {maisons.map((m) => (
+          <li class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+            <h2 class="text-lg font-semibold text-gray-900">{m.nomMaison}</h2>
+            <p class="mt-1 text-sm text-gray-600">{m.adresse}</p>
+            <p class="mt-3 text-sm text-gray-700">
+              Surface: <span class="font-semibold">{m.surface} m²</span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Layout>

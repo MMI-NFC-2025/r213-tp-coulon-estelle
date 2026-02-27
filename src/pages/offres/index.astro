@@ -1,14 +1,9 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import OffreCard from "../components/OffreCard.astro";
+import Layout from "../../layouts/Layout.astro";
+import OffreCard from "../../components/OffreCard.astro";
+import { getOffres } from "../../js/backend.mjs";
 
-import Img01 from "../assets/img/image1.avif";
-import Img02 from "../assets/img/image2.avif";
-import Img03 from "../assets/img/image3.avif";
-
- import { getOffres } from "../js/backend.mjs";
 const offres = await getOffres();
-console.log(offres);
 ---
 
 <Layout titre="Offres">
@@ -43,7 +38,8 @@ console.log(offres);
       const offres = document.querySelectorAll(".offre");
 
       offres.forEach((offre) => {
-        const htmlElement = offre as HTMLElement;
+        const htmlElement = offre instanceof HTMLElement ? offre : null;
+        if (!htmlElement) return;
         const isFavori = htmlElement.dataset.favori === "true";
 
         if (showOnlyFavorites) {

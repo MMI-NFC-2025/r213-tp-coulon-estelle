@@ -19,7 +19,7 @@ const { offre } = Astro.props;
     <div class="p-5">
         <PbImage 
             record={offre} 
-            imageField="images"
+            imageField={offre.images[1]}
             class="w-full h-48 object-cover rounded-lg mb-4 shadow-md" 
         />
 
@@ -46,6 +46,7 @@ const { offre } = Astro.props;
                 <p class="text-xs text-red-500 uppercase">m²</p>
             </div>
         </div>
+        <a href={`/offres/surface/[surface].astro${offre.id}`}>Voir plus</a>
     </div>
 </div>
 
