@@ -1,0 +1,101 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { addOffre } from '../../js/backend.mjs';
+
+let message = "";
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+
+    // Transformer FormData en objet
+    const house = {
+        nomMaison: formData.get("nomMaison")?.toString() || "",
+        prix: formData.get("prix")?.toString() || "",
+        nbSdb: formData.get("nbSdb")?.toString() || "",
+        nbChambres: formData.get("nbChambres")?.toString() || "",
+        surface: formData.get("surface")?.toString() || "",
+        images: formData.get("images")
+    };
+
+    // Vérifier que les champs obligatoires ne sont pas vides
+    const emptyFields = Object.entries(house).filter(([key, value]) => {
+        return key !== "images" && value === "";
+    });
+
+    if (emptyFields.length > 0) {
+        message = "Tous les champs doivent être remplis.";
+    } else {
+        const response = await addOffre(house);
+        message = response.message;
+    }
+
+} else {
+    console.log("GET request");
+}
+---
+
+<Layout titre="Ajouter une offre">
+  <section class="py-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-5xl md:text-6xl font-bold text-pink-600 text-center mb-8">
+        Ajouter une offre
+      </h1>
+
+      {message && (
+        <div class="mb-6 p-4 rounded-lg bg-pink-100 text-pink-800 text-center">
+          {message}
+        </div>
+      )}
+
+      <form action="/offres/add" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <input 
+          type="text" 
+          name="nomMaison" 
+          placeholder="Nom de la maison" 
+          required 
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" 
+        />
+        <input 
+          type="number" 
+          name="prix" 
+          placeholder="Prix" 
+          required 
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" 
+        />
+        <input 
+          type="number" 
+          name="nbSdb" 
+          placeholder="Nombre de salles de bain" 
+          required 
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" 
+        />
+        <input 
+          type="number" 
+          name="nbChambres" 
+          placeholder="Nombre de chambres" 
+          required 
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" 
+        />
+        <input 
+          type="number" 
+          name="surface" 
+          placeholder="Superficie (m²)" 
+          required 
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" 
+        />
+        <input 
+          type="file" 
+          name="images" 
+          accept="image/jpeg,image/jpg,image/png,image/webp,image/gif" 
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" 
+        />
+        <button 
+          type="submit" 
+          class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300"
+        >
+          Ajouter l'offre
+        </button>
+      </form>
+    </div>
+  </section>
+</Layout>
