@@ -1,15 +1,65 @@
 ---
-import { getOffre } from '../../js/backend.js';
-import Base from '../../layouts/Base.astro';
+import { getOffre, getImageUrl } from '../../js/backend.js';
+import Layout from '../../layouts/Layout.astro';
+import PbImage from '../../components/PbImage.astro';
 
 const { id } = Astro.params;
 const offre = await getOffre(id);
 ---
 
-<Base titre={offre.nomMaison}>
-    <h2>{offre.nomMaison}</h2>
-    <ul>
-        <li>{offre.adresse}</li>
-        ...
-    </ul>
-</Base>
+<Layout titre={offre?.nomMaison || 'Détail offre'}>
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <a href="/offres" class="text-red-600 hover:text-red-700 mb-6 inline-block">← Retour aux offres</a>
+            
+            {offre && (
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    {offre.images && offre.images[0] && (
+                        <PbImage 
+                            record={offre}
+                            imageField={offre.images[0]}
+                            class="w-full h-96 object-cover"
+                        />
+                    )}
+                    
+                    <div class="p-8">
+                        <h1 class="text-5xl font-bold text-red-700 mb-4">{offre.nomMaison}</h1>
+                        <p class="text-2xl font-bold text-rose-500 mb-6">{offre.prix} €<span class="text-base text-red-400"> / mois</span></p>
+                        
+                        <div class="grid grid-cols-4 gap-4 mb-8 p-6 bg-red-50 rounded-xl">
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-red-700">{offre.nbChambres}</p>
+                                <p class="text-sm text-red-600 uppercase">Chambres</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-red-700">{offre.nbSdb}</p>
+                                <p class="text-sm text-red-600 uppercase">SDB</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-3xl font-bold text-red-700">{offre.surface}</p>
+                                <p class="text-sm text-red-600 uppercase">m²</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-red-700">📍</p>
+                                <p class="text-sm text-red-600 uppercase">Adresse</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-red-700 mb-2">Adresse</h3>
+                                <p class="text-gray-700">{offre.adresse}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {!offre && (
+                <div class="bg-red-100 text-red-800 p-6 rounded-lg text-center">
+                    <p>Offre non trouvée</p>
+                </div>
+            )}
+        </div>
+    </section>
+</Layout>

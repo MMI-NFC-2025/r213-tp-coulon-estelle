@@ -1,0 +1,32 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import AgentCard from "../../components/AgentCard.astro";
+import { getAgents } from "../../js/backend.mjs";
+
+const agents = await getAgents();
+---
+
+<Layout titre="Agents">
+  <section class="py-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-5xl md:text-6xl font-bold text-pink-600 text-center mb-8">
+        Agents
+      </h1>
+    <p class="text-center text-pink-600 text-lg mb-10 font-semibold">
+      Rencontrez notre équipe d'experts en immobilier
+    </p>
+
+      {agents.length === 0 ? (
+        <div class="mb-6 p-4 rounded-lg bg-pink-100 text-pink-800 text-center">
+          <p>Aucun agent disponible pour le moment.</p>
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {agents.map((agent) => (
+            <AgentCard agent={agent} />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Layout>

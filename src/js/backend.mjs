@@ -46,3 +46,43 @@ export async function filterByPrix(minPrix, maxPrix) {
         return [];
     }
 }
+
+export async function getAgents() {
+    try {
+        const data = await db.collection('agent').getFullList();
+        console.log('AGENTS OK:', data);
+        return data;
+    } catch (error) {
+        console.log('AGENTS ERROR:', error);
+        return [];
+    }
+}
+
+export async function getAgent(id) {
+    try {
+        const agent = await db.collection('agent').getOne(id, {
+            expand: 'field',
+        });
+        console.log('AGENT OK:', agent);
+        return agent;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant l\'agent', error);
+        return null;
+    }
+}
+
+export async function setFavori(house) {
+    try {
+        await db.collection('maison').update(house.id, { favori: !house.favori });
+        return {
+            success: true,
+            message: 'Favori mis à jour avec succès'
+        };
+    } catch (error) {
+        console.log('Une erreur est survenue en mettant à jour le favori', error);
+        return {
+            success: false,
+            message: 'Une erreur est survenue en mettant à jour le favori'
+        };
+    }
+}
